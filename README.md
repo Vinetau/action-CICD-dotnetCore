@@ -15,7 +15,7 @@ yarn build
 ```
 
 - uses: actions/checkout@v1
-- uses: forsythes-technology/action-CICD-dotnetCore@master
+- uses: Vinetau/action-CICD-dotnetCore@master
       with: 
 	    CREATE_RELEASE: true # If set to 'true' the package will be deployed to octopus and a release will be created.
         PROJECTS: e.g. MyProject or MyProject,MyOtherProject  # Optional, must be included if CREATE_RELEASE is true
