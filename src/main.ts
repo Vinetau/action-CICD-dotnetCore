@@ -43,10 +43,12 @@ async function main() {
 				const counter = `(${i}/${projects.length})`;
 				core.info(project);
 				core.info(`${counter} Packing...`);
-				if(useZipPackages === "True") {
+				if (useZipPackages === "True") {
+					core.info(`Packing {project} as zip`);
 					await exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version} --format=zip`);
 				}
 				else {
+					core.info(`Packing {project} as nuget`);
 					await exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version}`);
 				}
 				core.info(`${counter} Push to Octopus...`);
