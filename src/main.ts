@@ -13,6 +13,7 @@ async function main() {
 		const octopusProject: string = core.getInput("OCTOPUS_PROJECT", { required: false });
 		const deployTo: string = core.getInput("DEPLOY_TO", { required: false });
 		const msTeamsWebhook: string = core.getInput("MS_TEAMS_WEBHOOK", { required: false });
+		const useZipPackages: string = core.getInput("USE_ZIP_PACKAGES", { required: false });
 		const context = github.context;
 		const repo = context.repo.repo;
 		const projectName = octopusProject ? octopusProject : repo;
@@ -42,7 +43,12 @@ async function main() {
 				const counter = `(${i}/${projects.length})`;
 				core.info(project);
 				core.info(`${counter} Packing...`);
-				await exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version}`);
+				if(useZipPackages === "True") {
+					await exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version} --format=zip`);
+				}
+				else {
+					await exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version}`);
+				}
 				core.info(`${counter} Push to Octopus...`);
 				await exec(`.\\dotnet-octo push --package=${project}\\artifacts\\${project}.${version}.nupkg --server=${octopusUrl} --apiKey=${octopusApiKey}`);
 			}
