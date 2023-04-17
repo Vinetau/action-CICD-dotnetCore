@@ -4041,12 +4041,13 @@ function main() {
             const octopusProject = core.getInput("OCTOPUS_PROJECT", { required: false });
             const deployTo = core.getInput("DEPLOY_TO", { required: false });
             const msTeamsWebhook = core.getInput("MS_TEAMS_WEBHOOK", { required: false });
-            const useZipPackages = core.getInput("USE_ZIP_PACKAGES", { required: false });
+            const useZipPackagesInput = core.getInput("USE_ZIP_PACKAGES", { required: false });
             const context = github.context;
             const repo = context.repo.repo;
             const projectName = octopusProject ? octopusProject : repo;
             const projects = projectsInput.split(",");
             const createRelease = (createReleaseInput.toLowerCase() === "true");
+            const useZipPackages = (useZipPackagesInput.toLowerCase() === "true");
             if (createRelease && (!octopusUrl || !octopusApiKey)) {
                 throw new Error("Cannot create a release without OCTOPUS_URL and OCTOPUS_APIKEY being defined");
             }
@@ -4071,12 +4072,12 @@ function main() {
                     const counter = `(${i}/${projects.length})`;
                     core.info(project);
                     core.info(`${counter} Packing...`);
-                    if (useZipPackages === "True") {
-                        core.info(`Packing {project} as zip`);
+                    if (useZipPackages) {
+                        core.info(`Packing ${project} as zip`);
                         yield exec_1.exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version} --format=zip`);
                     }
                     else {
-                        core.info(`Packing {project} as nuget`);
+                        core.info(`Packing ${project} as nuget`);
                         yield exec_1.exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version}`);
                     }
                     core.info(`${counter} Push to Octopus...`);
