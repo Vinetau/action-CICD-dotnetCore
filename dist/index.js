@@ -4075,13 +4075,15 @@ function main() {
                     if (useZipPackages) {
                         core.info(`Packing ${project} as zip`);
                         yield exec_1.exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version} --format=zip`);
+                        core.info(`${counter} Push to Octopus...`);
+                        yield exec_1.exec(`.\\dotnet-octo push --package=${project}\\artifacts\\${project}.${version}.zip --server=${octopusUrl} --apiKey=${octopusApiKey}`);
                     }
                     else {
                         core.info(`Packing ${project} as nuget`);
                         yield exec_1.exec(`.\\dotnet-octo pack --id=${project} --outFolder=${project}\\artifacts --basePath=${project}\\output --version=${version}`);
+                        core.info(`${counter} Push to Octopus...`);
+                        yield exec_1.exec(`.\\dotnet-octo push --package=${project}\\artifacts\\${project}.${version}.nupkg --server=${octopusUrl} --apiKey=${octopusApiKey}`);
                     }
-                    core.info(`${counter} Push to Octopus...`);
-                    yield exec_1.exec(`.\\dotnet-octo push --package=${project}\\artifacts\\${project}.${version}.nupkg --server=${octopusUrl} --apiKey=${octopusApiKey}`);
                 }
                 core.info("Creating Release...");
                 const deployToString = deployTo ? `--deployTo=${deployTo}` : "";
