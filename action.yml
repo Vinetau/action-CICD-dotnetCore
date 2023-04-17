@@ -22,6 +22,9 @@ inputs:
   MS_TEAMS_WEBHOOK:  
     description: 'If set, A MS Teams notification will be sent to this webhook'
     required: false
+  USE_ZIP_PACKAGES:  
+    description: 'If set, Octopack will pack built artefacts folders into zip packages instead of nuget'
+    required: false
 runs:
   using: "node12"
   main: "dist/index.js"
